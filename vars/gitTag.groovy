@@ -14,12 +14,14 @@ def call(body) {
     sh "git config user.email fabric8-admin@googlegroups.com"
     sh "git config user.name fabric8"
 
-    if (skipVersionPrefix){
-        sh "git tag -fa ${config.releaseVersion} -m 'Release version ${config.releaseVersion}'"
-        sh "git push origin ${config.releaseVersion}"
-    } else {
-        sh "git tag -fa v${config.releaseVersion} -m 'Release version ${config.releaseVersion}'"
-        sh "git push origin v${config.releaseVersion}"
+    def prefix = "v"
+    if (skipVersionPrefix) {
+        prefix = ""
+    } else if (config.prefix) {
+        prefix = config.prefix
     }
+    
+    sh "git tag -fa ${prefix}${config.releaseVersion} -m 'Release version ${config.releaseVersion}'"
+    sh "git push origin ${prefix}${config.releaseVersion}"
     
 }
